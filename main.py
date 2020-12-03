@@ -74,9 +74,10 @@ def short():
     if alias in c:
         flash("Alias Already Exists")
     else:
+        alias=alias.replace(' ','')
         cursor.execute(f'insert into data values("{alias}","{url}");')
         sqliteConnection.commit()
-        flash("Success!")
+        flash(f"Success! visit at:{alias}")
     return redirect("/")
 
 
