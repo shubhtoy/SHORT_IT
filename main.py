@@ -77,7 +77,7 @@ def short():
         cursor.execute(f'insert into data values("{alias}","{url}");')
         sqliteConnection.commit()
         flash("Success!")
-        return redirect("/")
+    return redirect("/")
 
 
 # @app.route("/login", methods=["POST", "GET"])
