@@ -1,4 +1,5 @@
 from flask import Flask, redirect, url_for, render_template, request, flash
+
 # import requests
 # import json
 import flask
@@ -50,6 +51,8 @@ def home():
 def start(var):
     sqliteConnection = sqlite3.connect("data.db")
     cursor = sqliteConnection.cursor()
+    # alias=alias.replace(' ','')
+    var = var.lower()
     cursor.execute(f"select url from data where alias='{var}';")
     c = cursor.fetchall()
     # print(c)
@@ -69,15 +72,17 @@ def short():
     u = request.form
     url = u["url"]
     alias = u["alias"]
+    alias = alias.replace(" ", "")
+    alias = alias.lower()
     cursor.execute("select alias from data;")
     c = [i[0] for i in cursor.fetchall()]
     if alias in c:
         flash("Alias Already Exists")
     else:
-        alias=alias.replace(' ','')
+
         cursor.execute(f'insert into data values("{alias}","{url}");')
         sqliteConnection.commit()
-        flash(f"Success! visit at:{alias}")
+        flash(f"Success! **visit at:smittal.tech/{alias} **")
     return redirect("/")
 
 
