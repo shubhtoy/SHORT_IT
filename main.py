@@ -1,6 +1,6 @@
 from flask import Flask, redirect, url_for, render_template, request, flash
-import requests
-import json
+# import requests
+# import json
 import flask
 import sqlite3
 
