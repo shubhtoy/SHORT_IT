@@ -8,6 +8,8 @@ import sqlite3
 app = Flask(__name__)
 # print(dir(flask))
 app.secret_key = "the random string"
+current = []
+done = {}
 
 
 @app.route("/")
@@ -49,6 +51,11 @@ def home():
 #         return url_for("home")
 @app.route("/<var>")
 def start(var):
+    global current, done
+    if var in current:
+        return redirect("/")
+    if var in done.keys():
+        return redirect(done[var])
     sqliteConnection = sqlite3.connect("data.db")
     cursor = sqliteConnection.cursor()
     # alias=alias.replace(' ','')
@@ -61,12 +68,14 @@ def start(var):
         return redirect(c[0][0])
     else:
         # print("yoyo")
+        current.append(var)
         return redirect("/")
     # c = [i for i in cursor.fetchall()]
 
 
 @app.route("/short/", methods=["POST"])
 def short():
+    global current, done
     sqliteConnection = sqlite3.connect("data.db")
     cursor = sqliteConnection.cursor()
     u = request.form
@@ -79,10 +88,13 @@ def short():
     if alias in c:
         flash("Alias Already Exists")
     else:
-
         cursor.execute(f'insert into data values("{alias}","{url}");')
+        done[alias] = url
         sqliteConnection.commit()
-        flash(f"Success! **visit at:smittal.tech/{alias} **")
+        if alias in current:
+            current.remove("alias")
+        flash(f"Success!")
+        flash(f"visit at - \nsmittal.tech/{alias}")
     return redirect("/")
 
 
