@@ -49,7 +49,7 @@ def home():
 #         return redirect(b[0][0])
 #     else:
 #         return url_for("home")
-@app.route("/<var>")
+@app.route("/<var>/")
 def start(var):
     global current, done
     if var in current:
@@ -92,7 +92,7 @@ def short():
         done[alias] = url
         sqliteConnection.commit()
         if alias in current:
-            current.remove("alias")
+            current.remove(alias)
         flash(f"Success!")
         flash(f"visit at - \nsmittal.tech/{alias}")
     return redirect("/")
