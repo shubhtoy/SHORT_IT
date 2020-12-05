@@ -103,8 +103,39 @@ def short():
     alias = alias.lower()
     cursor.execute("select alias from data;")
     c = [i[0] for i in cursor.fetchall()]
-    if alias in c:
+    if alias in c or alias == "short":
         flash("Alias Already Exists")
+    elif bool(
+        list(
+            filter(
+                lambda x: x
+                in [
+                    "@",
+                    "!",
+                    "#",
+                    "$",
+                    "%",
+                    "^",
+                    "&",
+                    "*",
+                    "(",
+                    ")",
+                    "'",
+                    '"',
+                    ".",
+                    ",",
+                    "/",
+                    "\\",
+                    "; ",
+                    " ~ ",
+                    " + ",
+                    " - ",
+                ],
+                [*alias],
+            )
+        )
+    ):
+        flash("Invalid Alias")
     else:
         cursor.execute(f'insert into data values("{alias}","{url}");')
         done[alias] = url
