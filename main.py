@@ -19,15 +19,24 @@ def home():
     return render_template("main.html")
 
 
-@app.route("/shubh/information/secret")
-def all():
+@app.route("/shubh/information/<var>")
+def all(var):
     sqliteConnection = sqlite3.connect("data.db")
     cursor = sqliteConnection.cursor()
-    cursor.execute("select * from data;")
-    a = prettytable.from_db_cursor(cursor)
-    return render_template(
-        "table.html", tbl=a.get_html_string(attributes={"class": "foo"})
-    )
+    if var == "secret":
+        cursor.execute("select * from data;")
+        a = prettytable.from_db_cursor(cursor)
+        return render_template(
+            "table.html", tbl=a.get_html_string(attributes={"class": "foo"})
+        )
+    else:
+        try:
+            cursor.execute(f'delete from data where alias="{var}"')
+            flash("Deleted Successfully")
+        except:
+            flash("Invalid Alias")
+        finally:
+            return redirect("/")
 
 
 # @app.route("/hello/<name>")
@@ -92,8 +101,8 @@ def short():
         url = u["url"]
         alias = u["alias"]
     else:
-        url = request.args.get("url")
-        alias = request.args.get("alias")
+        print("hi")
+        return redirect("/")
 
     global current, done
     sqliteConnection = sqlite3.connect("data.db")
