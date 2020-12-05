@@ -1,0 +1,4 @@
+*.elasticbeanstalk*
+*.vscode*
+*short-1t*
+*short-it*

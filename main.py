@@ -1,4 +1,5 @@
 from flask import Flask, redirect, url_for, render_template, request, flash
+import prettytable
 
 # import requests
 # import json
@@ -8,14 +9,23 @@ import sqlite3
 app = Flask(__name__)
 # print(dir(flask))
 app.secret_key = "the random string"
-current = []
-done = {}
 
 
 @app.route("/")
 def home():
 
     return render_template("main.html")
+
+
+@app.route("/shubh/information/secret")
+def all():
+    sqliteConnection = sqlite3.connect("data.db")
+    cursor = sqliteConnection.cursor()
+    cursor.execute("select * from data;")
+    a = prettytable.from_db_cursor(cursor)
+    return render_template(
+        "table.html", tbl=a.get_html_string(attributes={"class": "foo"})
+    )
 
 
 # @app.route("/hello/<name>")
@@ -49,13 +59,8 @@ def home():
 #         return redirect(b[0][0])
 #     else:
 #         return url_for("home")
-@app.route("/<var>/")
+@app.route("/<var>")
 def start(var):
-    global current, done
-    if var in current:
-        return redirect("/")
-    if var in done.keys():
-        return redirect(done[var])
     sqliteConnection = sqlite3.connect("data.db")
     cursor = sqliteConnection.cursor()
     # alias=alias.replace(' ','')
@@ -68,14 +73,12 @@ def start(var):
         return redirect(c[0][0])
     else:
         # print("yoyo")
-        current.append(var)
         return redirect("/")
     # c = [i for i in cursor.fetchall()]
 
 
 @app.route("/short/", methods=["POST"])
 def short():
-    global current, done
     sqliteConnection = sqlite3.connect("data.db")
     cursor = sqliteConnection.cursor()
     u = request.form
@@ -88,13 +91,10 @@ def short():
     if alias in c:
         flash("Alias Already Exists")
     else:
+
         cursor.execute(f'insert into data values("{alias}","{url}");')
-        done[alias] = url
         sqliteConnection.commit()
-        if alias in current:
-            current.remove(alias)
-        flash(f"Success!")
-        flash(f"visit at - \nsmittal.tech/{alias}")
+        flash(f"Success! **visit at:smittal.tech/{alias} **")
     return redirect("/")
 
 
