@@ -101,7 +101,7 @@ def short():
         url = u["url"]
         alias = u["alias"]
     else:
-        print("hi")
+        print("GET RECEIVED LOL")
         return redirect("/")
 
     global current, done
@@ -165,4 +165,4 @@ def short():
 #         return render_template("login.html")
 
 if __name__ == "__main__":
-    app.run()
+    app.run(ssl_context=("cert.pem", "key.pem"))
