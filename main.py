@@ -36,7 +36,7 @@ def all(var):
         except:
             flash("Invalid Alias")
         finally:
-            return redirect("/")
+            return redirect("https://")
 
 
 # @app.route("/hello/<name>")
@@ -74,7 +74,7 @@ def all(var):
 def start(var):
     global current, done
     if var in current:
-        return redirect("/")
+        return redirect("https://")
     if var in done.keys():
         return redirect(done[var])
     sqliteConnection = sqlite3.connect("data.db")
@@ -90,11 +90,11 @@ def start(var):
     else:
         # print("yoyo")
         current.append(var)
-        return redirect("/")
+        return redirect("https://")
     # c = [i for i in cursor.fetchall()]
 
 
-@app.route("/short/", methods=["POST", "GET"])
+@app.route("/short/", methods=["POST"])
 def short():
     if request.method == "POST":
         u = request.form
@@ -102,7 +102,7 @@ def short():
         alias = u["alias"]
     else:
         print("GET RECEIVED LOL")
-        return redirect("/")
+        return redirect("https://")
 
     global current, done
     sqliteConnection = sqlite3.connect("data.db")
@@ -153,7 +153,7 @@ def short():
             current.remove(alias)
         flash(f"Success!")
         flash(f"visit at - \nsmittal.tech/{alias}")
-    return redirect("/")
+    return redirect("https://")
 
 
 # @app.route("/login", methods=["POST", "GET"])
@@ -165,4 +165,4 @@ def short():
 #         return render_template("login.html")
 
 if __name__ == "__main__":
-    app.run(ssl_context=("cert.pem", "key.pem"))
+    app.run(ssl_context=("cert.crt", "key.key"))
