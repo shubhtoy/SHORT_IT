@@ -3,4 +3,3 @@ flask
 prettytable
 qrcode[PIL]
 pillow
-base64
