@@ -13,6 +13,11 @@ current = []
 done = {}
 
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return redirect("/")
+
+
 @app.route("/")
 def home():
 
@@ -21,6 +26,7 @@ def home():
 
 @app.route("/shubh/information/<var>")
 def all(var):
+    global done
     sqliteConnection = sqlite3.connect("data.db")
     cursor = sqliteConnection.cursor()
     if var == "secret":
@@ -31,12 +37,13 @@ def all(var):
         )
     else:
         try:
-            cursor.execute(f'delete from data where alias="{var}"')
+            cursor.execute(f'delete from data where alias="{var}";')
             sqliteConnection.commit()
-            flash("Deleted Successfully")
+            flash("Done Bro!")
+            if var in done.keys():
+                current.pop(var)
         except:
-            flash("Invalid Alias")
-
+            pass
         return redirect("/")
 
 
