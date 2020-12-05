@@ -122,7 +122,7 @@ def short():
     alias = alias.lower()
     cursor.execute("select alias from data;")
     c = [i[0] for i in cursor.fetchall()]
-    if alias in c or alias == "short":
+    if alias in c or alias in ["short", "final"]:
         flash("Alias Already Exists")
     elif bool(
         list(
