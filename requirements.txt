@@ -2,6 +2,5 @@ gunicorn==20.0.4
 flask
 prettytable
 qrcode[PIL]
-PIL
-io
+pillow
 base64
