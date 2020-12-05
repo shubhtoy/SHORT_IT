@@ -32,11 +32,12 @@ def all(var):
     else:
         try:
             cursor.execute(f'delete from data where alias="{var}"')
+            sqliteConnection.commit()
             flash("Deleted Successfully")
         except:
             flash("Invalid Alias")
-        finally:
-            return redirect("https://")
+
+        return redirect("/")
 
 
 # @app.route("/hello/<name>")
@@ -74,7 +75,7 @@ def all(var):
 def start(var):
     global current, done
     if var in current:
-        return redirect("https://")
+        return redirect("/")
     if var in done.keys():
         return redirect(done[var])
     sqliteConnection = sqlite3.connect("data.db")
@@ -90,19 +91,18 @@ def start(var):
     else:
         # print("yoyo")
         current.append(var)
-        return redirect("https://")
+        return redirect("/")
     # c = [i for i in cursor.fetchall()]
 
 
-@app.route("/short/", methods=["POST"])
+@app.route("/short/", methods=["GET"])
 def short():
-    if request.method == "POST":
-        u = request.form
-        url = u["url"]
-        alias = u["alias"]
+    if request.method == "GET":
+        url = request.args.get("url")
+        alias = request.args.get("alias")
     else:
-        print("GET RECEIVED LOL")
-        return redirect("https://")
+        print("POST RECEIVED LOL")
+        return redirect("/")
 
     global current, done
     sqliteConnection = sqlite3.connect("data.db")
@@ -153,7 +153,7 @@ def short():
             current.remove(alias)
         flash(f"Success!")
         flash(f"visit at - \nsmittal.tech/{alias}")
-    return redirect("https://")
+    return redirect("/")
 
 
 # @app.route("/login", methods=["POST", "GET"])
