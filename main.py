@@ -85,14 +85,20 @@ def start(var):
     # c = [i for i in cursor.fetchall()]
 
 
-@app.route("/short/", methods=["POST"])
+@app.route("/short/", methods=["POST", "GET"])
 def short():
+    if request.method == "POST":
+        u = request.form
+        url = u["url"]
+        alias = u["alias"]
+    else:
+        url = request.args.get("url")
+        alias = request.args.get("alias")
+
     global current, done
     sqliteConnection = sqlite3.connect("data.db")
     cursor = sqliteConnection.cursor()
-    u = request.form
-    url = u["url"]
-    alias = u["alias"]
+
     alias = alias.replace(" ", "")
     alias = alias.lower()
     cursor.execute("select alias from data;")
