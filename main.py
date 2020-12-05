@@ -1,10 +1,13 @@
-from flask import Flask, redirect, url_for, render_template, request, flash
+from flask import Flask, redirect, url_for, render_template, request, flash, session
 import prettytable
 
 # import requests
 # import json
 import flask
 import sqlite3
+import qrcode
+import base64
+from io import BytesIO
 
 app = Flask(__name__)
 # print(dir(flask))
@@ -152,24 +155,31 @@ def short():
         )
     ):
         flash("Invalid Alias")
+        return redirect("/")
     else:
         cursor.execute(f'insert into data values("{alias}","{url}");')
         done[alias] = url
         sqliteConnection.commit()
         if alias in current:
             current.remove(alias)
-        flash(f"Success!")
-        flash(f"visit at - \nsmittal.tech/{alias}")
-    return redirect("/")
+        # flash(f"Success!")
+        # flash(f"visit at - \nsmittal.tech/{alias}"
+        img = qrcode.make(f"smittal.tech/{alias}")
+
+        buffered = BytesIO()
+        img.save(buffered, format="png")
+        img_str = base64.b64encode(buffered.getvalue())
+        session["b64"] = img_str
+        session["alias"] = alias
+        return redirect("/final")
 
 
-# @app.route("/login", methods=["POST", "GET"])
-# def login():
-#     if request.method == "POST":
-#         user = request.form["nm"]
-#         return redirect(url_for("user", usr=user))
-#     else:
-#         return render_template("login.html")
+@app.route("/final")
+def login():
+    alias = session.get("alias", None)
+    img_str = session.get("b64", None)
+    return render_template("final.html", link=f"smittal.tech/{alias}", data=img_str)
+
 
 if __name__ == "__main__":
     app.run(ssl_context=("cert.crt", "key.key"))
