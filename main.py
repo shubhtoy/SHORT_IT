@@ -44,7 +44,7 @@ def all(var):
             sqliteConnection.commit()
             flash("Done Bro!")
             if var in done.keys():
-                current.pop(var)
+                done.pop(var)
         except:
             pass
         return redirect("/")
@@ -124,6 +124,7 @@ def short():
     c = [i[0] for i in cursor.fetchall()]
     if alias in c or alias in ["short", "final"]:
         flash("Alias Already Exists")
+        return redirect("/")
     elif bool(
         list(
             filter(
