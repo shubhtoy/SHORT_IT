@@ -176,6 +176,7 @@ def short():
         img_str = base64.b64encode(buffered.getvalue())
         session["b64"] = img_str
         session["alias"] = alias
+        flash(f"USE smittal.tech/{alias}/qr TO VISIT THIS PAGE")
         return redirect("/final")
 
 
