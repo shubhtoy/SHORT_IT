@@ -179,7 +179,10 @@ def short():
 def login():
     alias = session.get("alias", None)
     img_str = session.get("b64", None)
-    return render_template("final.html", link=f"smittal.tech/{alias}", data=img_str)
+    if not alias:
+        return redirect("/")
+    else:
+        return render_template("final.html", link=f"smittal.tech/{alias}", data=img_str)
 
 
 if __name__ == "__main__":
