@@ -8,7 +8,17 @@ import sqlite3
 import qrcode
 import base64
 from io import BytesIO
+import mysql.connector as ms
 
+db = ms.connect(
+    host="logs.c7xtjtjv8ph3.ap-south-1.rds.amazonaws.com",
+    port=3306,
+    user="shubh",
+    passwd="shubh2003",
+    db="short",
+)
+db.autocommit = True
+cursor = db.cursor()
 app = Flask(__name__)
 # print(dir(flask))
 app.secret_key = "the random string"
@@ -30,8 +40,7 @@ def home():
 @app.route("/shubh/information/<var>")
 def all(var):
     global done
-    sqliteConnection = sqlite3.connect("data.db")
-    cursor = sqliteConnection.cursor()
+    db.ping(reconnect=True, attempts=1, delay=0)
     if var == "secret":
         cursor.execute("select * from data;")
         a = prettytable.from_db_cursor(cursor)
@@ -41,7 +50,7 @@ def all(var):
     else:
         try:
             cursor.execute(f'delete from data where alias="{var}";')
-            sqliteConnection.commit()
+
             flash("Done Bro!")
             if var in done.keys():
                 done.pop(var)
@@ -50,37 +59,6 @@ def all(var):
         return redirect("/")
 
 
-# @app.route("/hello/<name>")
-# def hello_world(name):
-#     return f"Hello World {name}"
-
-
-# @app.route("/weather", methods=["POST", "GET"])
-# def weather():
-#     city = request.form["city"]
-#     url = f"http://api.openweathermap.org/data/2.5/weather?appid=be5af63b2dadbf2170846910fb5dec85&q={city}"
-#     res = requests.get(url)
-#     res = res.json()
-#     if res["cod"] != "404":
-#         print(f'{str(round(res["main"]["temp"] - 273, 2))}°C')
-#         return f'{str(round(res["main"]["temp"] - 273, 2))}°C'
-
-
-# @app.route("/go/<alias>")
-# def first(alias):
-#     sqliteConnection = sqlite3.connect("data.db")
-#     cursor = sqliteConnection.cursor()
-#     cursor.execute(f"select * from data;")
-#     b = cursor.fetchall()
-#     print(b)
-#     cursor.execute(f"select url from data where alias='{alias}';")
-#     b = cursor.fetchall()
-#     print(type(b))
-#     print(b)
-#     if b:
-#         return redirect(b[0][0])
-#     else:
-#         return url_for("home")
 @app.route("/<var>")
 def start(var):
     global current, done
@@ -88,8 +66,7 @@ def start(var):
         return redirect("/")
     if var in done.keys():
         return redirect(done[var])
-    sqliteConnection = sqlite3.connect("data.db")
-    cursor = sqliteConnection.cursor()
+    db.ping(reconnect=True, attempts=1, delay=0)
     # alias=alias.replace(' ','')
     var = var.lower()
     cursor.execute(f"select url from data where alias='{var}';")
@@ -115,13 +92,13 @@ def short():
         return redirect("/")
 
     global current, done
-    sqliteConnection = sqlite3.connect("data.db")
-    cursor = sqliteConnection.cursor()
+    db.ping(reconnect=True, attempts=1, delay=0)
 
     alias = alias.replace(" ", "")
     alias = alias.lower()
     cursor.execute("select alias from data;")
     c = [i[0] for i in cursor.fetchall()]
+
     if alias in c or alias in ["short", "final"]:
         flash("Alias Already Exists")
         return redirect("/")
@@ -160,7 +137,7 @@ def short():
     else:
         cursor.execute(f'insert into data values("{alias}","{url}");')
         done[alias] = url
-        sqliteConnection.commit()
+
         if alias in current:
             current.remove(alias)
         # flash(f"Success!")

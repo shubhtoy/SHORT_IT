@@ -3,3 +3,4 @@ flask
 prettytable
 qrcode[PIL]
 pillow
+mysql.connector
