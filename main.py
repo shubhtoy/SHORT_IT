@@ -73,17 +73,18 @@ def qr(var):
         var = var.lower()
         cursor.execute(f"select url from data where alias='{var}';")
         c = cursor.fetchall()
-    # print(c)
-    if c:
-        img = qrcode.make(f"smittal.tech/{var}")
-        buffered = BytesIO()
-        img.save(buffered, format="png")
-        img_str = base64.b64encode(buffered.getvalue())
-        session["b64"] = img_str
-        session["alias"] = var
-        return redirect("/final")
-    else:
-        return redirect("/")
+        # print(c)
+        if c:
+            img = qrcode.make(f"smittal.tech/{var}")
+            buffered = BytesIO()
+            img.save(buffered, format="png")
+            img_str = base64.b64encode(buffered.getvalue())
+            session["b64"] = img_str
+            session["alias"] = var
+            flash(f"USE smittal.tech/{var}/qr TO VISIT THIS PAGE")
+            return redirect("/final")
+        else:
+            return redirect("/")
 
 
 @app.route("/<var>")
