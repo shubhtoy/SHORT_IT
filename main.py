@@ -59,7 +59,39 @@ def all(var):
         return redirect("/")
 
 
+<<<<<<< HEAD
 @app.route("/<var/>")
+=======
+@app.route("/<var>/qr")
+def qr(var):
+    if var in current:
+        img = qrcode.make(f"smittal.tech/{var}")
+        buffered = BytesIO()
+        img.save(buffered, format="png")
+        img_str = base64.b64encode(buffered.getvalue())
+        session["b64"] = img_str
+        session["alias"] = var
+        return redirect("/final")
+    else:
+        var = var.lower()
+        cursor.execute(f"select url from data where alias='{var}';")
+        c = cursor.fetchall()
+        # print(c)
+        if c:
+            img = qrcode.make(f"smittal.tech/{var}")
+            buffered = BytesIO()
+            img.save(buffered, format="png")
+            img_str = base64.b64encode(buffered.getvalue())
+            session["b64"] = img_str
+            session["alias"] = var
+            flash(f"USE smittal.tech/{var}/qr TO VISIT THIS PAGE")
+            return redirect("/final")
+        else:
+            return redirect("/")
+
+
+@app.route("/<var>")
+>>>>>>> 8909f70df2aa17c6f213c762b88f739215992455
 def start(var):
     global current, done
     if var in current:
@@ -149,6 +181,7 @@ def short():
         img_str = base64.b64encode(buffered.getvalue())
         session["b64"] = img_str
         session["alias"] = alias
+        flash(f"USE smittal.tech/{alias}/qr TO VISIT THIS PAGE")
         return redirect("/final")
 
 
