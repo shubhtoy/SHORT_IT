@@ -59,9 +59,6 @@ def all(var):
         return redirect("/")
 
 
-<<<<<<< HEAD
-@app.route("/<var/>")
-=======
 @app.route("/<var>/qr")
 def qr(var):
     if var in current:
@@ -90,8 +87,7 @@ def qr(var):
             return redirect("/")
 
 
-@app.route("/<var>")
->>>>>>> 8909f70df2aa17c6f213c762b88f739215992455
+@app.route("/<var>/")
 def start(var):
     global current, done
     if var in current:
