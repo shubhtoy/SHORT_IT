@@ -37,7 +37,7 @@ def home():
     return render_template("main.html")
 
 
-@app.route("/shubh/information/<var>")
+@app.route("/shubh/information/<var>/")
 def all(var):
     global done
     db.ping(reconnect=True, attempts=1, delay=0)
@@ -59,7 +59,7 @@ def all(var):
         return redirect("/")
 
 
-@app.route("/<var>")
+@app.route("/<var/>")
 def start(var):
     global current, done
     if var in current:
@@ -152,7 +152,7 @@ def short():
         return redirect("/final")
 
 
-@app.route("/final")
+@app.route("/final/")
 def login():
     alias = session.get("alias", None)
     img_str = session.get("b64", None)
