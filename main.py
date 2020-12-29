@@ -59,7 +59,7 @@ def all(var):
         return redirect("/")
 
 
-@app.route("/<var>/qr")
+@app.route("/<var>/qr/")
 def qr(var):
     if var in current:
         img = qrcode.make(f"smittal.tech/{var}")
