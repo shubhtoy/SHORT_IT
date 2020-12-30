@@ -21,7 +21,7 @@ db.autocommit = True
 cursor = db.cursor()
 app = Flask(__name__)
 # print(dir(flask))
-app.secret_key = "the random string"
+app.secret_key = "lmao"
 current = []
 done = {}
 
