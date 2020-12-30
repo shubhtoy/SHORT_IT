@@ -43,11 +43,16 @@ def all(var):
     db.ping(reconnect=True, attempts=1, delay=0)
     if var == "secret":
         cursor.execute("select * from data;")
-        a = prettytable.from_db_cursor(cursor)
-        return render_template(
-            "table.html", tbl=a.get_html_string(attributes={"class": "foo"})
-        )
+        a = cursor.fetchall()
+        a = a[-1:1:-1]
+        print(a)
+        # a = prettytable.from_db_cursor(cursor)
+        # return render_template(
+        #     "table.html", tbl=a.get_html_string(attributes={"class": "foo"})
+        # )
+        return render_template("table2.html", data=a)
     else:
+
         try:
             cursor.execute(f'delete from data where alias="{var}";')
 

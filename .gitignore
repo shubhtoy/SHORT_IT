@@ -2,3 +2,7 @@
 *.vscode*
 *short-1t*
 *short-it*
+ss.py
+test.py
+*.exe*
+*.db*
