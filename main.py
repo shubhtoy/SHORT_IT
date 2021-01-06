@@ -1,8 +1,6 @@
 from flask import Flask, redirect, url_for, render_template, request, flash, session
 import prettytable
-
-# import requests
-# import json
+from flask_sitemap import Sitemap
 import flask
 import sqlite3
 import qrcode
@@ -24,6 +22,9 @@ app = Flask(__name__)
 app.secret_key = "lmao"
 current = []
 done = {}
+app.config["SITEMAP_URL_SCHEME"] = "https"
+app.config["SITEMAP_INCLUDE_RULES_WITHOUT_PARAMS"] = True
+ext = Sitemap(app=app)
 
 
 @app.errorhandler(404)
@@ -46,10 +47,6 @@ def all(var):
         a = cursor.fetchall()
         a = a[-1:1:-1]
         print(a)
-        # a = prettytable.from_db_cursor(cursor)
-        # return render_template(
-        #     "table.html", tbl=a.get_html_string(attributes={"class": "foo"})
-        # )
         return render_template("table2.html", data=a)
     else:
 
@@ -109,10 +106,8 @@ def start(var):
         print(c[0])
         return redirect(c[0][0])
     else:
-        # print("yoyo")
         current.append(var)
         return redirect("/")
-    # c = [i for i in cursor.fetchall()]
 
 
 @app.route("/short/", methods=["GET"])
@@ -173,8 +168,6 @@ def short():
 
         if alias in current:
             current.remove(alias)
-        # flash(f"Success!")
-        # flash(f"visit at - \nsmittal.tech/{alias}"
         img = qrcode.make(f"smittal.tech/{alias}")
 
         buffered = BytesIO()
