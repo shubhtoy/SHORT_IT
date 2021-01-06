@@ -113,8 +113,11 @@ def start(var):
 @app.route("/short/", methods=["GET"])
 def short():
     if request.method == "GET":
-        url = request.args.get("url")
-        alias = request.args.get("alias")
+        try:
+            url = request.args.get("url")
+            alias = request.args.get("alias")
+        except:
+            return redirect("/")
     else:
         print("POST RECEIVED LOL")
         return redirect("/")
