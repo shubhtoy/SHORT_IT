@@ -116,6 +116,9 @@ def short():
         try:
             url = request.args.get("url")
             alias = request.args.get("alias")
+            if url == '' or alias == '':
+                flash("ERROR INVALID URL/ALIAS")
+                return redirect("/")
         except:
             return redirect("/")
     else:
