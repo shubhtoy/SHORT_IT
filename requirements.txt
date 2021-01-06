@@ -4,3 +4,4 @@ prettytable
 qrcode[PIL]
 pillow
 mysql.connector
+flask_sitemap
